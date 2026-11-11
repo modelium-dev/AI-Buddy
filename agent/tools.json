@@ -1,0 +1,15 @@
+{
+  "server": "mock-corp",
+  "transport": "MCP JSON-RPC 2.0 over HTTP (POST /mcp)",
+  "tools": [
+    "wiki.search_pages", "wiki.get_page",
+    "tracker.list_tasks", "tracker.get_task", "tracker.create_task", "tracker.update_task",
+    "git.get_codeowners", "git.find_owner", "git.list_reviewers",
+    "access.get_options", "access.suggest_approver", "access.create_request", "access.get_request", "access.decide",
+    "absence.get_balance", "absence.create_request", "absence.get_request",
+    "org.get_profile", "org.get_manager", "org.get_hrbp", "org.get_mentor",
+    "admin.reset"
+  ],
+  "side_effects_only_after_human_confirmation": ["access.create_request", "absence.create_request"],
+  "full_schemas": "GET http://mock-corp:8001/tools"
+}

@@ -1,0 +1,4 @@
+{
+  "guide_mode_default": {"type": "enum", "values": ["guide", "direct"], "default": "guide", "description": "A/B: режим по умолчанию"},
+  "llm_fail_next": {"type": "bool", "default": false, "description": "Dev: следующий ответ ИИ завершится таймаутом"}
+}

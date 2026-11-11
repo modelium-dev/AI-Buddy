@@ -1,0 +1,46 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: buddy
+      POSTGRES_PASSWORD: buddy
+      POSTGRES_DB: buddy
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buddy"]
+      interval: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  mock-corp:
+    build: {context: ., dockerfile: mcp/mock-corp/Dockerfile}
+    ports: ["8001:8001"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 3s
+      retries: 20
+
+  api:
+    build: {context: ., dockerfile: apps/api/Dockerfile}
+    env_file: [.env]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://buddy:buddy@db:5432/buddy
+      REDIS_URL: redis://redis:6379/0
+      MCP_URL: http://mock-corp:8001
+      SCHEDULER_ENABLED: "true"
+    ports: ["8000:8000"]
+    volumes: [attachments:/data/attachments]
+    depends_on:
+      db: {condition: service_healthy}
+      redis: {condition: service_started}
+      mock-corp: {condition: service_healthy}
+
+  # web: фронтенд (apps/web) подключается сюда, когда будет готов
+
+volumes:
+  pgdata:
+  attachments:

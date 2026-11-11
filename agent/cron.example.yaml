@@ -1,0 +1,7 @@
+jobs:
+  - name: tasks-sync
+    schedule: "*/1 * * * *"
+    action: tracker.list_tasks → синхронизация папок задач (task.created / task.updated / task.closed)
+  - name: morning-digest
+    schedule: "0 8 * * 1-5"
+    action: сводка «На чём остановились» для каждого стажёра
